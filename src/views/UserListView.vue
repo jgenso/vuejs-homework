@@ -1,12 +1,20 @@
 <script>
 
 import axios from 'axios' 
+import DeleteModal from '../components/DeleteModal.vue'
+
 
 export default {
     name: 'UserListView',
+    components:{
+        DeleteModal
+    },
     data() {
         return {
-            users: []
+            users: [],
+            selectedUser: {},
+            visible: false,
+            msg: ''
         }
     },
     methods: {
@@ -30,12 +38,19 @@ export default {
                 //ToDo
             })
         },
-        deleteUserById(id) {
-            axios.deleteUserById(`http://localhost:8080/v1/users/${id}`).then(res => {
-                console.log(res)
+        deleteUserById() {
+            axios.delete(`http://localhost:8080/v1/users/${this.selectedUser.id}`).then(res => {
+                console.log('delete ',res)
             }).catch(function (error) {
 
             })
+        },
+        openDeleteUserModal(selectedUser) {
+            this.selectedUser = selectedUser
+            this.visible = !this.visible
+        }, 
+        closeModalFn() {
+            this.visible = false
         }
     },
     mounted() {        
@@ -71,7 +86,7 @@ export default {
                         <td>{{ user.roles.join(', ') }}</td>
                         <td>
                             <RouterLink :to="{ path: `/users/${user.id}/edit` }" class="btn btn-success">Edit</RouterLink>
-                            <button type="button" @click="deleteUserById(user.id)" class="btn btn-danger">Delete</button>
+                            <button type="button" @click="openDeleteUserModal(user)" class="btn btn-danger">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -84,4 +99,9 @@ export default {
         </div>
     </div>
   </div>
+  <DeleteModal  variant="danger" :visible="visible" :deleteFn="deleteUserById" :closeFn="closeModalFn">
+    <p class="text-center">Esta seguro de eliminar el usuario {{this.selectedUser.username}}?</p>
+  </DeleteModal>
+
+
 </template>
