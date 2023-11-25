@@ -49,7 +49,6 @@ export default {
         getRoles() {
             axios.get('http://localhost:8080/v1/roles').then(response => {
                 this.roles = response.data.map(role => {
-                    console.log('ROLE', role)
                     return {
                         value: role.id,
                         label: role.name
