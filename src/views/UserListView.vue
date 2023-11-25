@@ -20,7 +20,8 @@ export default {
                             return r
                         })                        
                         return user
-                    })                    
+                    })           
+                    console.log('CALLED')         
                 }).catch(function (error) {
                     console.log('E1', error)
                 })                
