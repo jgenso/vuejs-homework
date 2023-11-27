@@ -32,13 +32,25 @@ export default {
         saveUser() {
             axios.put(`http://localhost:8080/v1/users/${this.$route.params.id}`, this.model.user).then(response => {
                 alert('User successfully updated!')
+                this.$router.push('/users')
             }).catch(function (error) {
+                if (error.code === 'ERR_BAD_REQUEST') {
+                    thisView.setErrors(error.response.data.errors)
+                }
                 console.error('Error', error)
             })
+        },
+        setErrors(errors) {
+            this.errors = errors
         },
         getUserById() {
             axios.get(`http://localhost:8080/v1/users/${this.$route.params.id}`).then(response => {
                 this.model.user = response.data
+                if (!this.model.user.userDetail) {
+                    this.model.user.userDetail = {
+                        firstName: '',
+                    }
+                }
                 console.log('USER', this.model.user)
             }).catch(function (error) {
                 console.log('Error', error)
@@ -76,6 +88,14 @@ export default {
         </div>
         <div class="card-body">
             <div class="mb-3">
+                <p v-if="errors.length">
+                    <b>Please correct the following error(s):</b>
+                    <ul>
+                    <li v-for="error in errors">{{ error.field }}: {{ error.defaultMessage }}</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" v-model="model.user.username" name="username" id="username" class="form-control">
             </div>
@@ -101,7 +121,7 @@ export default {
             </div>
             <div class="mb-3">
                 <label for="birthDay" class="form-label">Birth Day</label>
-                <input type="text" v-model="model.user.userDetail.birthDay" name="birthDay" id="birthDay" class="form-control">
+                <input type="date" v-model="model.user.userDetail.birthDay" name="birthDay" id="birthDay" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">Roles</label>

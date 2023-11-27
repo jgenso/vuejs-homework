@@ -22,29 +22,27 @@ export default {
                         birthDay: ''
                     },
                     roles: []
-                }
+                }                
             },
-            roles: []
+            roles: [],
+            errors: []
         }
     },
     methods: {
         saveUser() {
+            const thisView = this
             axios.post('http://localhost:8080/v1/users', this.model.user).then(response => {
                 alert('User successfully create!')
-                this.model.user = {
-                    username: '',
-                    email: '',
-                    userDetail: {
-                        firstName: '',
-                        lastName: '',
-                        age: '',
-                        birthDay: ''
-                    },
-                    roles: []
-                }
+                this.$router.push('/users')                
             }).catch(function (error) {
+                if (error.code === 'ERR_BAD_REQUEST') {
+                    thisView.setErrors(error.response.data.errors)
+                }
                 console.error('Error', error)
             })
+        },
+        setErrors(errors) {
+            this.errors = errors
         },
         getRoles() {
             axios.get('http://localhost:8080/v1/roles').then(response => {
@@ -77,6 +75,14 @@ export default {
         </div>
         <div class="card-body">
             <div class="mb-3">
+                <p v-if="errors.length">
+                    <b>Please correct the following error(s):</b>
+                    <ul>
+                    <li v-for="error in errors">{{ error.field }}: {{ error.defaultMessage }}</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" v-model="model.user.username" name="username" id="username" class="form-control">
             </div>
@@ -102,7 +108,7 @@ export default {
             </div>
             <div class="mb-3">
                 <label for="birthDay" class="form-label">Birth Day</label>
-                <input type="text" v-model="model.user.userDetail.birthDay" name="birthDay" id="birthDay" class="form-control">
+                <input type="date" v-model="model.user.userDetail.birthDay" name="birthDay" id="birthDay" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">Roles</label>

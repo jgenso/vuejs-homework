@@ -41,6 +41,8 @@ export default {
         deleteUserById() {
             axios.delete(`http://localhost:8080/v1/users/${this.selectedUser.id}`).then(res => {
                 console.log('delete ',res)
+                this.getUsers()
+                this.closeModalFn()
             }).catch(function (error) {
 
             })
