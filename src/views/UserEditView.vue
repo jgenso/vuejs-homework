@@ -25,7 +25,8 @@ export default {
                     roles: []
                 }
             },
-            roles: []
+            roles: [],
+            errors: []
         }
     },
     methods: {
