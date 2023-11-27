@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
 </script>
 
 <template>
@@ -26,9 +27,16 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
 <style scoped>
+.el-alert {
+    margin: 20px 0 0;
+}
+
+.el-alert:first-child {
+    margin: 0;
+}
 </style>
+

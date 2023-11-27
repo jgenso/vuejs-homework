@@ -22,6 +22,9 @@ npm install
 npm run dev
 ```
 
+### Backend
+Currently working with https://github.com/jgenso/springboot-homework please use branch remove-auth as frontend doesnt support auth yet (this branch has the auth disabled)
+
 ### Compile and Minify for Production
 
 ```sh
